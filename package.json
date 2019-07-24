@@ -1,0 +1,16 @@
+{
+  "name": "slack_troublemakerbot",
+  "version": "1.0.0",
+  "description": "Slackbot who cares about you and your issues",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "restify": "^8.3.3",
+    "slackbots": "^1.1.0"
+  }
+}
