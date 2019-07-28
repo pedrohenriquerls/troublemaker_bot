@@ -1,3 +1,8 @@
+const showdown = require('showdown');
+const mrkdwn = require('html-to-mrkdwn');
+const converter = new showdown.Converter({metadata: true});
+converter.setFlavor('github');
+
 module.exports = function parseGithubIssue(payload) {
   const issue = payload.issue;
   const action = payload.action;
@@ -5,7 +10,7 @@ module.exports = function parseGithubIssue(payload) {
   const { user, title, body, url, labels, number } = issue;
   const { html_url, avatar_url, login } = user;
 
-  // TODO improve the body formatter https://api.slack.com/tools/block-kit-builder
+  // https://api.slack.com/tools/block-kit-builder
   const message = {
     'slackbot': 'true',
     'attachments': [
@@ -46,7 +51,9 @@ function parseTitle(issue) {
 function parseBody(issue) {
   const { labels, body } = issue;
   const formattedLabels = formatLabels(labels);
-  const formattedBody = body;
+  const bodyHtml = converter.makeHtml(body);
+  const formattedBody = mrkdwn(bodyHtml).text;
+
   return `${formattedBody}\n\n *Labels*\n${formattedLabels}`;
 }
 
