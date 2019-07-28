@@ -1,5 +1,7 @@
 const showdown = require('showdown');
 const mrkdwn = require('html-to-mrkdwn');
+const config = require('./config.js');
+const configIssue = config.issue;
 const converter = new showdown.Converter({metadata: true});
 converter.setFlavor('github');
 
@@ -33,9 +35,22 @@ module.exports = function parseGithubIssue(payload) {
 
   return {
     action,
+    channels: channels(labels),
     message
   };
 };
+
+function channels(labels) {
+  const { teams, defaultChannel } = configIssue;
+  return labels.reduce((channels, label) => {
+    const team = teams[label.name];
+
+    if (team) {
+      return [...channels, team.channel];
+    }
+    return channels;
+  }, [defaultChannel]);
+}
 
 function actionColor(action) {
   switch(action) {

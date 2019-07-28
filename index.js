@@ -19,24 +19,25 @@ server.get('/ping', function(req, res, next){
   next();
 });
 
-const validActions = ['opened', 'reopened', 'closed'];
 server.post('/github/webhook', (req, res, next) => {
   const issuePayload = req.body;
   const issue = parseGithubIssue(issuePayload);
+  sendIssueToChannels(issue);
 
-  if (validActions.includes(issue.action)) {
-    bot.postMessageToChannel('geral', null, issue.message);
-  }
-
-  // events with labeled actions happen when the user change one label issue
-  // Event with opened action happen when the use create a new issue
-  // Event closed
-  // Event reopened
-  // body { issue: { url, title, body, labels: { name } }}
-  //  bot.postMessageToChannel('channel-name', 'message');
   res.send('ok');
   next();
 });
+
+const validActions = ['opened', 'reopened', 'closed'];
+function sendIssueToChannels(issue) {
+  const { action, message, channels } = issue;
+
+  if (validActions.includes(issue.action)) {
+    channels.forEach((channel) => {
+      bot.postMessageToChannel(channel, null, message);
+    });
+  }
+}
 
 server.use(restify.plugins.bodyParser({
   requestBodyOnGet: true
