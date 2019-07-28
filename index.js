@@ -20,7 +20,7 @@ server.get('/ping', function(req, res, next){
 });
 
 server.post('/github/webhook', (req, res, next) => {
-  const issuePayload = JSON.parse(req.body.payload);
+  const issuePayload = req.body;
   const issue = parseGithubIssue(issuePayload);
 
   if (issue.action === 'opened') {
