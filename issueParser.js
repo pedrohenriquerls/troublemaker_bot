@@ -1,4 +1,4 @@
-export default function parseGithubIssue(payload) {
+module.exports = function parseGithubIssue(payload) {
   const issue = payload.issue;
   const action = payload.action;
 
@@ -30,7 +30,7 @@ export default function parseGithubIssue(payload) {
     action,
     message
   };
-}
+};
 
 function parsePretext(issue, action) {
   const { user } = issue;
