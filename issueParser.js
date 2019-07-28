@@ -16,7 +16,7 @@ module.exports = function parseGithubIssue(payload) {
     'attachments': [
       {
         pretext: parsePretext(issue, action),
-        color: '#36a64f',
+        color: actionColor(action),
         author_name: login,
         author_link: html_url,
         author_icon: avatar_url,
@@ -36,6 +36,17 @@ module.exports = function parseGithubIssue(payload) {
     message
   };
 };
+
+function actionColor(action) {
+  switch(action) {
+  case 'opened':
+    return '#368da6';
+  case 'reopened':
+    return '#a63655';
+  case 'closed':
+    return '#36a64f';
+  }
+}
 
 function parsePretext(issue, action) {
   const { user } = issue;

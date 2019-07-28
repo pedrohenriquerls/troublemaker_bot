@@ -19,11 +19,12 @@ server.get('/ping', function(req, res, next){
   next();
 });
 
+const validActions = ['opened', 'reopened', 'closed'];
 server.post('/github/webhook', (req, res, next) => {
   const issuePayload = req.body;
   const issue = parseGithubIssue(issuePayload);
 
-  if (issue.action === 'opened') {
+  if (validActions.includes(issue.action)) {
     bot.postMessageToChannel('geral', null, issue.message);
   }
 
